@@ -26,8 +26,11 @@ const useAnecdoteStore = create((set) => ({
           anecdote.id === id ? {...anecdote, votes: anecdote.votes + 1 } : anecdote
         )
       })
+    ),
+    addAction: anecdote => set(
+      state => ({ anecdotes: state.anecdotes.concat(anecdote) })
     )
-  },
+  }
 }))
 
 export const useAnecdotes = () => useAnecdoteStore((state) => state.anecdotes)
