@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
-import { render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, render, renderHook, screen } from '@testing-library/react'
 import { createElement } from 'react'
 import AnecdoteList from '../components/AnecdoteList'
 
@@ -19,6 +18,10 @@ import { useAnecdoteStore, useAnecdotes, useAnecdotesActions } from '../store'
 beforeEach(() => {
     useAnecdoteStore.setState({ anecdotes: [], filter: '' })
     vi.clearAllMocks()
+})
+
+afterEach(() => {
+    cleanup()
 })
 
 describe('useAnecdotesActions', () => {
@@ -55,5 +58,22 @@ describe('AnecdoteList', () => {
             'Middle popularity',
             'Least popular'
         ])
+    })
+
+    it('displays only anecdotes matching the filter', () => {
+        useAnecdoteStore.setState({
+            anecdotes: [
+                { id: 1, content: 'Testing is valuable', votes: 3 },
+                { id: 2, content: 'Keep the code simple', votes: 5 },
+                { id: 3, content: 'Ship early', votes: 8 }
+            ],
+            filter: 'code'
+        })
+
+        render(createElement(AnecdoteList))
+
+        expect(screen.getByText('Keep the code simple')).toBeTruthy()
+        expect(screen.queryByText('Testing is valuable')).toBeNull()
+        expect(screen.queryByText('Ship early')).toBeNull()
     })
 })
