@@ -12,13 +12,14 @@ const useAnecdoteStore = create((set) => ({
         )
       })
     ),
-    addAction: anecdote => set(
-      state => ({ anecdotes: state.anecdotes.concat(anecdote) })
-    ),
     setFilter: value => set(() => ({ filter: value })),
     initialize: async () => {
       const anecdotes = await anecdoteService.getAll()
       set(() => ({ anecdotes }))
+    },
+    addAction: async (content) => {
+      const newAnecdote = await anecdoteService.addNew(content)
+      set(state => ({ anecdotes: state.anecdotes.concat(newAnecdote) }))
     }
   }
 }))
