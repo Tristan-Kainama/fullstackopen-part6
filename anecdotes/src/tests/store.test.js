@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, cleanup, render, renderHook, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import { createElement } from 'react'
 import AnecdoteList from '../components/AnecdoteList'
 
@@ -75,5 +75,20 @@ describe('AnecdoteList', () => {
         expect(screen.getByText('Keep the code simple')).toBeTruthy()
         expect(screen.queryByText('Testing is valuable')).toBeNull()
         expect(screen.queryByText('Ship early')).toBeNull()
+    })
+
+    it('increases an anecdote vote count when it is voted for', () => {
+        useAnecdoteStore.setState({
+            anecdotes: [
+                { id: 1, content: 'A testable anecdote', votes: 0 }
+            ],
+            filter: ''
+        })
+
+        render(createElement(AnecdoteList))
+
+        fireEvent.click(screen.getByRole('button', { name: 'vote' }))
+
+        expect(screen.getByText(/has 1/)).toBeTruthy()
     })
 })
