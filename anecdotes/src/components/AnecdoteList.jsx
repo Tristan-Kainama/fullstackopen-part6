@@ -7,7 +7,7 @@ const AnecdoteList = () => {
 
     const vote = (anecdote) => {
         voteAction(anecdote.id)
-        setMessage(`You voted '${anecdote.content}'`)
+        setMessage(`you voted '${anecdote.content}'`)
         setTimeout(() => {
             setMessage('')
         }, 5000)
@@ -26,13 +26,13 @@ const AnecdoteList = () => {
         {anecdotes.toSorted((a, b) => b.votes - a.votes).map((anecdote) => (
             <div key={anecdote.id}>
                 <div>
-                    {anecdote.content}
+                    <span>{anecdote.content}</span>
+                    <div>
+                        has {anecdote.votes}
+                        <button onClick={() => vote(anecdote)}>vote</button>
+                    </div>
                     <button style={{ display: anecdote.votes === 0 ? 'block' : 'none'}} onClick={() => remove(anecdote)}>delete</button>
                 </div> 
-                <div>
-                has {anecdote.votes}
-                <button onClick={() => vote(anecdote)}>vote</button>
-                </div>
             </div>
         ))}
     </div>
